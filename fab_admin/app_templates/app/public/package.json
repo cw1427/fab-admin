@@ -12,7 +12,7 @@
         "test:e2e": "vue-cli-service test:e2e"
     },
     "dependencies": {
-        "axios": "=0.18.0",
+        "axios": "=0.19.2",
         "bootstrap": "=3.4.1",
         "bootstrap-table": "=1.15.5",
         "bootstrap-vue": "=2.0.3",
