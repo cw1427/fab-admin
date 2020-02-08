@@ -1,0 +1,7 @@
+apply plugin: 'eclipse-wtp'
+
+eclipse {
+    wtp {
+
+    }
+}

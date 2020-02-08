@@ -1,0 +1,26 @@
+version: '3'
+services:
+  {* app_name *}:
+    image:
+    container_name: {* app_name *}
+    network_mode: host
+    ports:
+     - 8080:8080
+    volumes:
+     - ./logs:/{* app_name *}/logs
+     - ./flask_session:/{* app_name *}/flask_session
+     - ./app.db:/{* app_name *}/app.db
+     - /etc/localtime:/etc/localtime:ro
+     - .db_pwd:/{* app_name *}/.db_pwd
+    environment:
+     - CONFIG_ENV=config_prod.py
+     - DB_USER=admin
+     - DB_HOST=your_mysql_server:3306
+     - DB_NAME={* app_name *}
+     - DB_PWD_FILE=.db_pwd
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000

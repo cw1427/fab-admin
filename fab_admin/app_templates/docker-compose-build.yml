@@ -1,0 +1,27 @@
+version: '3'
+services:
+  {* app_name *}:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: {* app_name *}
+    network_mode: host
+    ports:
+     - 8080:8080
+    volumes:
+     - ./logs:/{* app_name *}/logs
+     - ./flask_session:/{* app_name *}/flask_session
+     - ./app.db:/{* app_name *}/app.db
+     - /etc/localtime:/etc/localtime:ro
+    environment:
+     - CONFIG_ENV=config_prod.py
+     - DB_USER=admin
+     - DB_HOST=127.0.0.1:3306
+     - DB_NAME=bas
+     - DB_PWD_FILE=.db_pwd
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000

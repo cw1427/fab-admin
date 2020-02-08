@@ -1,0 +1,10 @@
+{% extends "appbuilder/base.html" %}
+
+{% block content %}
+<h2><center>{{_('Welcome')}}, {{appbuilder.get_app.config.get('APP_NAME')}} {{appbuilder.get_app.config.get('APP_VERSION')}}<center></h2>
+
+<div class="well">
+<a class="btn btn-primary btn-lg btn-block" href="/switch/vue">NEW UI</a>
+</div>
+{% endblock %}
+

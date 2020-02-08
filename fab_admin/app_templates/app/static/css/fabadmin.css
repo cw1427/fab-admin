@@ -1,0 +1,13 @@
+body {
+    margin-bottom:50px;
+}
+
+
+.footer {
+    margin-bottom: 0px;
+    bottom:0;
+}
+
+.endpoint{
+     font-weight:bold
+}
