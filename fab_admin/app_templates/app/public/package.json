@@ -21,6 +21,8 @@
         "countup": "^1.8.2",
         "cropperjs": "^1.5.6",
         "echarts": "^4.5.0",
+        "event-source-polyfill": "^1.0.9",
+        "reconnecting-eventsource": "^1.0.4",
         "html2canvas": "^1.0.0-rc.5",
         "iview": "=3.3.0",
         "iview-area": "=1.6.0",

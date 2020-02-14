@@ -20,7 +20,9 @@ import redis_sentinel_url
 from flask import current_app
 from werkzeug.local import Local, LocalProxy
 from werkzeug.utils import import_string
+import logging
 
+log = logging.getLogger(__name__)
 
 _EXTENSION_KEY = 'redissentinel'
 

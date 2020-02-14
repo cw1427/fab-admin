@@ -14,7 +14,7 @@ def read(fname):
     return open(fpath(fname)).read()
 
 def desc():
-    return read('README.rst')
+    return read('README.md')
 
 setup(
     name='fab_admin',

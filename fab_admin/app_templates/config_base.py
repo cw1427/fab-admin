@@ -143,7 +143,7 @@ class config(config.config):
     FLASK_LOG_PATH = '%s/logs/%s.log' % (basedir, version.APP_NAME.lower())
 
     #----addon manager register
-    ADDON_MANAGERS = ['fab_addon_autodoc.manager.AutoDocManager']
+    ADDON_MANAGERS = ['fab_addon_autodoc.manager.AutoDocManager', 'fab_admin.addon.sse.manager.SSEManager']
     TEMPLATES_AUTO_RELOAD = True
     AUTO_UPDATE_PERM = os.environ.get('AUTO_UPDATE_PERM', True)
     #----user type

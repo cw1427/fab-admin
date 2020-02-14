@@ -27,6 +27,7 @@ app.config.setdefault('REDIS_ENCODER', CustomJsonEncoder())
 redis_master, redis_slave = redis_sentinel_client_factory(app, service_name=app.config['REDISSN'])
 # sse redis client
 sse_master, _ = redis_sentinel_client_factory(app, service_name=app.config['REDISSN'], config_prefix='SSE_REDIS')
+app.extensions['sse_master'] = sse_master
 # rq redis client
 rq_redis_master, _ = redis_sentinel_client_factory(app, service_name=app.config['REDISSN'], config_prefix='RQ_REDIS')
 rq = RQ(app, client=rq_redis_master)
