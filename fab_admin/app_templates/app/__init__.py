@@ -31,7 +31,8 @@ app.extensions['sse_master'] = sse_master
 # rq redis client
 rq_redis_master, _ = redis_sentinel_client_factory(app, service_name=app.config['REDISSN'], config_prefix='RQ_REDIS')
 rq = RQ(app, client=rq_redis_master)
-from . import sse_views, views, models
+from . import views, models
+from fab_admin import views_confcenter
 if not app.config['APP_MODE'] == 'DEV':
     # queues views need redis service avalible in product node
     from . import queues_views

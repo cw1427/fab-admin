@@ -34,7 +34,7 @@ def clone_fabadmin_app(name, force):
         return
 
     render_data = {'app_name': name, 'now': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                   'secret_key': gen_salt(64)}
+                   'secret_key': gen_salt(64), 'fab_admin_path': fab_admin.__path__[0]}
     template_path = os.path.join(fab_admin.__path__[0], 'app_templates')
     templateLoader = jinja2.FileSystemLoader(searchpath=template_path)
     templateEnv = jinja2.Environment(loader=templateLoader, variable_start_string='{*', variable_end_string='*}')
@@ -46,7 +46,8 @@ def clone_fabadmin_app(name, force):
             if ori_path.suffix in ['.pyc']:
                 continue
             elif ori_path.suffix in ['.py', '.yml', '.bat', '.rst', '.gradle', '.sh', '.bash', '.json', '.vue',
-                '.properties'] or file_path in [os.path.join(template_path, 'app', 'public', 'public', 'index.html')]:
+                '.properties'] or file_path in [os.path.join(template_path, 'app', 'public', 'public', 'index.html'),
+                                                os.path.join(template_path, 'app', 'public', 'vue.config.js')]:
                 _render_file(templateEnv, file_path.replace(template_path, ''), target_file_path, render_data)
             elif ori_path.name in ['Dockerfile']:
                 _render_file(templateEnv, file_path.replace(template_path, ''), target_file_path, render_data)

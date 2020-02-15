@@ -31,6 +31,7 @@ module.exports = {
             .set('@', resolve('src'))
             .set('_c', resolve('src/components'))
             .set('_conf', resolve('config'))
+            .set('#', '{* fab_admin_path | replace("\\","/") *}' + '/addon')
         config.module.rule('fonts')
             .test(/\.(woff2?|eot|ttf|otf)(\?.*)?$/i)
             .use('url-loader')

@@ -3,9 +3,10 @@ import Router from 'vue-router'
 import routes from './routers'
 import store from '@/store'
 import iView from 'iview'
-import { getToken, canTurnTo } from '@/libs/util'
+import { getToken, canTurnTo, loadFabadminAddonRoute } from '@/libs/util'
 
 Vue.use(Router)
+routes.push(...loadFabadminAddonRoute())
 const router = new Router({
     routes
 })
@@ -36,8 +37,12 @@ router.beforeEach((to, from, next) => {
                         name: LOGIN_PAGE_NAME // go to login
                     })
                 } else {
-                    if (canTurnTo(to.name, store.state.user.access, routes)) next()
-                    else next({ replace: true, name: 'error_401' })
+                    if (canTurnTo(to.name, store.state.user.access, routes)){
+                        if (['confCenter', 'confManage', 'credConfig', 'credManage'].indexOf(to.name) > -1) {
+                            store.dispatch('handleBasePath', to.path)
+                        }
+                        next()
+                    } else next({ replace: true, name: 'error_401' })
                 }
             })
         } else {

@@ -6,5 +6,6 @@ export default {
     /**
      */
     useI18n: false,
-    TOKEN_KEY: 'fabadmin_frontend_token'
+    TOKEN_KEY: 'fabadmin_frontend_token',
+    fabadmin_addons: ['sse']
 }

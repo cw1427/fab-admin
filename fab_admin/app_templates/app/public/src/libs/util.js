@@ -253,3 +253,12 @@ export const setSha1 = (v) => {
         localStorage.sha1 = v
     }
 }
+
+export const loadFabadminAddonRoute=() =>{
+    const addonRoutes=[]
+    config.fabadmin_addons.forEach((v)=>{
+        const route = require('#/'+v+'/public/viewui/route.js')
+        addonRoutes.push(route.default)
+    })
+    return addonRoutes
+}
