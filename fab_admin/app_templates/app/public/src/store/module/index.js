@@ -22,4 +22,13 @@ requireModule.keys().forEach(fileName => {
            // ...requireModule(fileName)[moduleName]
        }
 })
+// import fab_admin_addon store_module
+config.fabadmin_addons.forEach((v)=>{
+    try{
+        const storeModule = require('#/'+v+'/public/viewui/store.js')
+        modules[camelCase(v)] ={ ...storeModule.default }
+    }catch(err){
+
+    }
+})
 export default modules

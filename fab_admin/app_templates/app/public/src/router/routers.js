@@ -3,8 +3,6 @@ import User from '@/view/security/user'
 import Role from '@/view/security/role'
 import SampleBenchmark from '@/view/sample/sample.vue'
 import Profile from '@/view/profile'
-import ConfCenter from '@/view/confcenter'
-import ConfCenterManage from '@/view/confcenter/confcentermanage.vue'
 
 export default [{
         path: '/login',
@@ -117,38 +115,6 @@ export default [{
             }
         ]
 
-    },
-    {
-        path: '/conf',
-        name: 'confcenter',
-        meta: {
-            icon: 'ios-flag',
-            title: 'Config Center',
-        },
-        component: Main,
-        children: [{
-                path: '/conf/config',
-                name: 'confCenter',
-                meta: {
-                    icon: 'ios-flower',
-                    title: 'config',
-                    componentName: 'ConfCenter',
-                    access: ['Admin','configurer']
-                },
-                component: ConfCenter
-            },
-            {
-                path: '/conf/manage',
-                name: 'confManage',
-                meta: {
-                    icon: 'ios-flower',
-                    title: 'management',
-                    access: ['Admin', 'confmanager'],
-                    componentName: 'ConfCenterManage'
-                },
-                component: ConfCenterManage
-            },
-        ]
     },
     {
         path: '/401',

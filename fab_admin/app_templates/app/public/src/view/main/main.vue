@@ -8,8 +8,8 @@
         </div>
       </side-menu>
       <div v-show="!collapsed" class="menufooter" width="210">
-            <div class="line"></div>
-            <div class="copyright">{* app_name *} Mobility © 2020 you.company,Inc. <br/> All Rights reserved.</div>
+            <div class="line"  style="width:210px"></div>
+            <div class="copyright"  style="width:210px">{* app_name *} Mobility © 2020 you.company,Inc. <br/> All Rights reserved.</div>
             <div style="text-align:center">
               <Row :gutter="4">
                 <Col span="10">
