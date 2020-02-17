@@ -2,7 +2,6 @@ import logging
 import functools
 
 from flask import flash, redirect, url_for, make_response, jsonify
-from flask_login import current_user
 from .._compat import as_unicode
 from ..const import LOGMSG_ERR_SEC_ACCESS_DENIED, FLAMSG_ERR_SEC_ACCESS_DENIED, PERMISSION_PREFIX
 
@@ -39,6 +38,7 @@ def has_access_api(f):
         By default the permission's name is the methods name.
         this will return a message and HTTP 401 is case of unauthorized access.
     """
+    from flask_login import current_user
     if hasattr(f, '_permission_name'):
         permission_str = f._permission_name
     else:

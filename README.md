@@ -9,6 +9,7 @@ Fab-admin a flask_appbuilder extension basic app skeleton
  - SSE
  - GraphQL
  - Mail
+ - Addon
 
 Depends on:
 -----------

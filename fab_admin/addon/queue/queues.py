@@ -1,13 +1,13 @@
 """
 Redis queue.
-Created on {* now *}.
+Created on 2020-02-17.
 @desc: Redis queue views.
-@app: {* app_name *}
+@app: fab_admin
 """
 import logging
 from app import appbuilder, rq
 import requests
-from app.models import MyUser
+from fab_admin.models import MyUser
 
 log = logging.getLogger(appbuilder.get_app.config['LOG_NAME'])
 

@@ -8,6 +8,9 @@ from __future__ import absolute_import
 from __future__ import print_function
 import sys
 import fab_admin
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class MonkeyPatchWarning(RuntimeWarning):
@@ -155,7 +158,9 @@ def _check_repatching(**module_settings):
     return _warnings, first_time, module_settings
 
 
-def patch_all(is_fab_model=True, is_fab_baseviews=True, is_flask_redis_sentinel=True):
+def patch_all(is_fab_model=True, is_fab_baseviews=True, is_flask_redis_sentinel=True,
+              is_fab_secu_decorators=True, is_flask_rq2_app=True, is_flask_rq2_cli=True,
+              is_rq_cli=True, is_rq_helper=True, is_rq_schedule_dashboard_web=True):
     """
         patch flask_appbuilder
     """
@@ -177,3 +182,26 @@ def patch_all(is_fab_model=True, is_fab_baseviews=True, is_flask_redis_sentinel=
     if is_flask_redis_sentinel:
         patch_module('flask_redis_sentinel', ['SentinelExtension', 'RedisSentinel'], 'flask_redis_sentinel.py')
 
+    if is_fab_secu_decorators:
+        # decorate has_access_api to support identify 403 401 type
+        patch_module('flask_appbuilder.security.decorators', ['has_access_api'],
+                     'flask_appbuilder/security/decorators.py')
+
+    if is_flask_rq2_app:
+        # patch flask_rq2 pass client by init method
+        patch_module('flask_rq2', ['RQ'], 'flask_rq2/app.py')
+        patch_module('flask_rq2.app', ['RQ'], 'flask_rq2/app.py')
+
+    if is_flask_rq2_cli:
+        """patch flask_rq2_cli module to add worker before run action"""
+        patch_module('flask_rq2.cli', ['reset_db_connections', 'worker'], 'flask_rq2/cli.py')
+
+    if is_rq_cli:
+        """patch rq_cli to add extra click option to pass client into rq"""
+        patch_module('rq.cli.cli', ['shared_options'], 'rq/cli/cli.py')
+
+    if is_rq_helper:
+        patch_module('rq.cli.helpers', ['CliConfig'], 'rq/cli/helpers.py')
+
+    if is_rq_schedule_dashboard_web:
+        patch_module('rq_scheduler_dashboard.web', ['setup_rq_connection'], 'rq_scheduler_dashboard/web.py')

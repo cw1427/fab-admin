@@ -21,7 +21,7 @@ module.exports = {
     // sub-path here. For example, if your app is deployed at
     // https://www.foobar.com/my-app/
     // then change this to '/my-app/'
-    baseUrl: process.env.NODE_ENV === 'production' ? BASE_URL : '/',
+    publicPath: process.env.NODE_ENV === 'production' ? BASE_URL : '/',
     outputDir: './dist',
     productionSourceMap: false,
     // tweak internal webpack configuration.

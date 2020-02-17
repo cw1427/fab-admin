@@ -15,7 +15,7 @@ from flask_login import LoginManager, current_user, login_user
 from fab_admin.models import CustomJsonEncoder
 from fab_admin.utils import create_app, redis_sentinel_client_factory
 from flask_appbuilder import Base
-from flask_rq2 import RQ
+from flask_rq2.app import RQ
 from sqlalchemy.orm import joinedload, contains_eager
 from sqlalchemy.sql.expression import and_
 

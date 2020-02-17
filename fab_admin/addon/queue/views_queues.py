@@ -1,19 +1,19 @@
 """
 Redis queue views.
-Created on {* now *}.
+Created on 2020-02-17.
 @desc: Redis queue views.
-@app: {* app_name *}
+@app: fab_admin
 """
 from flask_appbuilder.baseviews import  expose, BaseView
 from flask_appbuilder.security.decorators import permission_name, has_access_api
 import logging
 
-from . import appbuilder, autodoc
+from app import appbuilder, autodoc
 from flask.json import jsonify
 from flask import render_template
 import pytz
 import datetime
-from queues import schedule_requests_task, schedule_test_task
+from fab_admin.addon.queue.queues import schedule_requests_task, schedule_test_task
 from requests.auth import HTTPBasicAuth
 import rq_dashboard
 import rq_scheduler_dashboard

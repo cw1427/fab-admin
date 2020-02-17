@@ -25,7 +25,7 @@ from flask import Blueprint, current_app, render_template, url_for
 from redis import Redis, from_url
 from rq import Queue, pop_connection, push_connection
 from rq_scheduler import Scheduler
-from redis.sentinel import Sentinel
+
 
 blueprint = Blueprint(
     'rq_scheduler_dashboard',
@@ -37,6 +37,7 @@ blueprint = Blueprint(
 
 @blueprint.before_app_first_request
 def setup_rq_connection():
+    from redis.sentinel import Sentinel
     redis_url = current_app.config.get('RQ_SCHEDULER_DASHBOARD_REDIS_URL')
     redis_sentinels = current_app.config.get('RQ_SCHEDULER_DASHBOARD_REDIS_SENTINELS')
     if redis_url:

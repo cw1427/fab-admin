@@ -13,7 +13,6 @@ from functools import update_wrapper
 import click
 from rq.cli import cli as rq_cli
 from rq.defaults import DEFAULT_RESULT_TTL, DEFAULT_WORKER_TTL
-from flask.globals import current_app
 
 
 try:
@@ -35,6 +34,7 @@ _commands = {}
 
 def reset_db_connections():
     "similar with django-rq to shut down any opened db connection before work fork."
+    from flask.globals import current_app
     ab = current_app.extensions['appbuilder']
     ab.get_session.close_all()
 

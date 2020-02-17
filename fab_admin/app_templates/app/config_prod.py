@@ -31,7 +31,7 @@ AUTO_UPDATE_PERM = os.environ.get('AUTO_UPDATE_PERM', False)
 REDISSN = 'mymaster'
 REDISPASS = os.environ.get('REDIS_PASSWORD', config_local.REDISPASS if config_local else None)
 REDIS_URL = os.environ.get('REDIS_URL', \
-                           "redis+sentinel://:{0}@localhost:26379/{1}/0".format(REDISPASS, REDISSN))
+                           "redis+sentinel://:{0}@localhost:6379/{1}/0".format(REDISPASS, REDISSN))
 SSE_REDIS_URL = os.environ.get('SSE_REDIS_URL', \
                                "redis+sentinel://:{0}@localhost:26379/{1}/1".format(REDISPASS, REDISSN))
 RQ_REDIS_URL = os.environ.get('RQ_REDIS_URL', \

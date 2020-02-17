@@ -66,6 +66,7 @@ setup(
         # "uwsgi-tasks==0.7.2",
         "Flask-Redis-Sentinel==2.0.1",
         "Flask-RQ2==18.3",
+        "rq==1.0",
         "rq-dashboard==0.5.1",
         "rq-scheduler-dashboard==0.0.2",
         "Flask-CLI==0.4.0",
