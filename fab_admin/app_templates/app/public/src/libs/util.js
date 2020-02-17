@@ -240,7 +240,9 @@ export const getVersion = () => {
 }
 
 export const setVersion = (v) => {
-    localStorage.version = v
+    if (v) {
+        localStorage.version = v
+    }
 }
 
 export const getSha1 = () => {

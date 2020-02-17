@@ -9,7 +9,7 @@ from . import appbuilder
 import logging
 from fab_admin.views import ApiUserView
 from flask.templating import render_template
-from fab_admin.utils import dynamic_import_by_patten
+from fab_admin.utils import dynamic_import_by_patten, dynamic_import_by_name
 
 """
     Create your Views::
@@ -39,3 +39,5 @@ log = logging.getLogger(appbuilder.get_app.config['LOG_NAME'])
 
 appbuilder.add_view_no_menu(ApiUserView)
 dynamic_import_by_patten(os.path.dirname(__file__), 'views_*')
+for views_addon in appbuilder.get_app.config['ADDON_VIEWS']:
+    dynamic_import_by_name(views_addon, module_prefix='fab_admin')

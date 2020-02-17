@@ -136,15 +136,7 @@ export default {
                     maxWidth: 700,
                     minWidth: 300,
                     render: (h,params) => {
-                        if (params.row.value instanceof Object ){
-                            return h('VueJsonPretty',{
-                                props:{
-                                    data:params.row.value,
-                                    deep: 2,
-                                    showLength:true
-                                }
-                            });
-                        }else{
+                        if (typeof(params.row.value) === 'string' || params.row.value instanceof String){
                             let lines = params.row.value.split(/\r?\n/);
                             let domLines =[];
                             lines.forEach(function(element) {
@@ -154,6 +146,14 @@ export default {
                                 }
                             });
                             return h('div',{},domLines);
+                        }else{
+                            return h('VueJsonPretty',{
+                                props:{
+                                    data:params.row.value,
+                                    deep: 2,
+                                    showLength:true
+                                }
+                            });
                         }
                     }
                 },
@@ -424,7 +424,15 @@ export default {
     valueTag: {
         get: function(){
             if (this.formItem.value=='') return [];
+            if (typeof(this.formItem.value) === 'string' || this.formItem.value instanceof String){
                 return this.formItem.value.split(/\r?\n/);
+            }else{
+                if (typeof(this.formItem.value) instanceof Array){
+                    return this.formItem.value;
+                }else{
+                    return [this.formItem.value];
+                }
+            }
         },
         set: function(newValue) {
             this.formItem.value = (newValue instanceof Array)? newValue.join("\n") : newValue;

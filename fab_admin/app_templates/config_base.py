@@ -144,6 +144,8 @@ class config(config.config):
 
     #----addon manager register
     ADDON_MANAGERS = ['fab_addon_autodoc.manager.AutoDocManager', 'fab_admin.addon.sse.manager.SSEManager']
+    # addon views which need to import after fab instance initialized
+    ADDON_VIEWS = ['views_confcenter']
     TEMPLATES_AUTO_RELOAD = True
     AUTO_UPDATE_PERM = os.environ.get('AUTO_UPDATE_PERM', True)
     #----user type

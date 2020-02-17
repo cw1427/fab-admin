@@ -61,7 +61,7 @@ def redis_sentinel_client_factory(app, service_name='mymaster', config_prefix='R
     return redis_master, redis_slave
 
 
-def dynamic_import_by_patten(path, patten):
+def dynamic_import_by_patten(path, patten, module_prefix='app'):
     """
         dynamic load the modules under the path by patten
     """
@@ -71,7 +71,13 @@ def dynamic_import_by_patten(path, patten):
 
     for file_path in glob.iglob(os.path.join(path, patten), recursive=False):
         module_path = Path(file_path)
-        importlib.import_module('app.' + module_path.name.split('.')[0])
+        importlib.import_module(f'{module_prefix}.' + module_path.name.split('.')[0])
 #         spec = importlib.util.spec_from_file_location(module_path.name.split('.')[0], file_path)
 #         source_module = importlib.util.module_from_spec(spec)
 #         spec.loader.exec_module(source_module)
+
+
+def dynamic_import_by_name(name,  module_prefix='app'):
+    """ dynamic import by name """
+    import importlib
+    importlib.import_module(f'{module_prefix}.{name}')

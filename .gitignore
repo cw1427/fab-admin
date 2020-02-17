@@ -23,8 +23,7 @@ app/__pycache__
 app/public/node_modules/*
 app/public/tests/*
 app/public/dist/*
-app/static/vue/*
-app/templates/vue/*
+
 app/public/package-lock.json
 .vscode
 config_local.py
