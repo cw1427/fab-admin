@@ -22,3 +22,8 @@ Depends on:
 - flask-openid
 - flask-wtform
 - flask-Babel
+
+Deploy and install:
+
+- python setup.py sdist --formats=gztar,zip
+-

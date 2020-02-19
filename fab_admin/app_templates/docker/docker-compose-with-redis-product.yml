@@ -1,7 +1,7 @@
 version: '3'
 services:
   bas:
-    image: artifacts-test.mot.com:5001/bas/bas_dev:0.1.1
+    image: <your fab_admin app image registry>:<version>
     container_name: bas
     network_mode: host
     ports:

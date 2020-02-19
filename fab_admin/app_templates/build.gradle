@@ -30,7 +30,7 @@ repositories {
 dependencies {
 }
 
-group = "fabadmin"
+group = "{* app_name *}"
 
 docker{
     dockerBinary='docker'
@@ -40,7 +40,7 @@ task fabadminDocker(type:Docker){
     dockerfile='Dockerfile'
     String cid=commitID()
     setEnvironment("COMMIT_ID", cid?cid:'NA')
-    applicationName = 'fabadmin_dev'
+    applicationName = '{* app_name *}_dev'
     tagVersion = getVersion()
     if (System.properties['registry'] != null) {
         registry = System.properties['registry']

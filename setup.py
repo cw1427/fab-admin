@@ -16,6 +16,11 @@ def read(fname):
 def desc():
     return read('README.md')
 
+def gather_package_data(folder_name):
+    import glob
+    data_files = []
+    return glob.glob(f"{folder_name}/**", recursive=True)
+
 setup(
     name='fab_admin',
     version=version.VERSION_STRING,
@@ -25,9 +30,13 @@ setup(
     author_email='cwvinus@163.com',
     description='',
     long_description=desc(),
-    long_description_content_type="text/x-rst",
+    long_description_content_type="text/markdown",
     packages=find_packages(),
-    package_data={'': ['LICENSE']},
+    package_data={'fab_admin.addon': gather_package_data('fab_admin/addon'),
+                  'fab_admin.app_templates': gather_package_data('fab_admin/app_templates'),
+                  'fab_admin.fab_manager_overwrite': gather_package_data('fab_admin/fab_manager_overwrite')},
+#     data_files=[gather_package_data('fab_admin/addon'),gather_package_data('fab_admin/app_templates'),
+#                 gather_package_data('fab_admin/fab_manager_overwrite')],
     entry_points={'console_scripts': [
           'fabadmin = fab_admin.console:cli',
       ]},
