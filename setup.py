@@ -22,7 +22,7 @@ def gather_package_data(folder_name):
     return glob.glob(f"{folder_name}/**", recursive=True)
 
 setup(
-    name='fab_admin',
+    name='fab-admin',
     version=version.VERSION_STRING,
     url='',
     license='BSD',
