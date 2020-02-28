@@ -19,7 +19,7 @@ except Exception:
 
 
 class config(object):
-    """ATS app common config class."""
+    """app common config class."""
     # Your App secret key
     SECRET_KEY = '89f861a04932329b77613bc2f7db7b73704e66d7'
     # SERVER_NAME = 'localhost:8000'
@@ -69,7 +69,7 @@ class config(object):
     # AUTH_USER_REGISTRATION_ROLE = "Public"
 
     # When using LDAP Auth, setup the ldap server
-    AUTH_LDAP_SERVER = 'ldap://ids.mot.com:389/'
+    AUTH_LDAP_SERVER = 'ldap://your-ldap-server:389/'
     AUTH_LDAP_SEARCH = 'ou=people,ou=intranet,dc=motorola,dc=com'
     AUTH_LDAP_EMAIL_FIELD = 'mail'
     AUTH_LDAP_UID_FIELD = 'motguid'
@@ -139,7 +139,7 @@ class config(object):
     PERMANENT_SESSION_LIFETIME = timedelta(days=1)
     FLASK_LOG_LEVEL = "DEBUG"
     LOG_LEVEL = "DEBUG"
-    LOG_NAME = "bsm"
+    LOG_NAME = "fabadmin"
     FLASK_LOG_PATH = os.getcwd() + '/logs/fab_admin.log'
 
     #----addon manager register
@@ -157,10 +157,10 @@ class config(object):
     #---config center config items
     REDISSN = 'mymaster'
     REDISPASS = os.environ.get('REDIS_PASSWORD', config_local.REDISPASS if config_local else None)
-    REDIS_URL = os.environ.get('REDIS_URL', "redis+sentinel://:{0}@10.110.7.34:26379/{1}/0".format(REDISPASS, REDISSN))
+    REDIS_URL = os.environ.get('REDIS_URL', "redis+sentinel://:{0}@localhost:26379/{1}/0".format(REDISPASS, REDISSN))
     REDIS_DECODE_RESPONSES = True
     CRED_CENTER_URL = os.environ.get('CRED_CENTER_URL', \
-                                     "redis+sentinel://:{0}@10.110.7.34:26379/{1}/1".format(REDISPASS, REDISSN))
+                                     "redis+sentinel://:{0}@localhost:26379/{1}/1".format(REDISPASS, REDISSN))
     CRED_CENTER_DECODE_RESPONSES = True
     #---security cleanup  would auto sync security data from code to DB
     SECURITY_CLEANUP = True
@@ -170,8 +170,8 @@ class config(object):
 
     # RQ
     RQ_REDIS_URL = os.environ.get('RQ_REDIS_URL', \
-                                  "redis+sentinel://:{0}@10.110.7.34:26379/{1}/2".format(REDISPASS, REDISSN))
-    RQ_DASHBOARD_REDIS_SENTINELS = '10.110.7.34:26379'
+                                  "redis+sentinel://:{0}@localhost:26379/{1}/2".format(REDISPASS, REDISSN))
+    RQ_DASHBOARD_REDIS_SENTINELS = 'localhost:26379'
     RQ_DASHBOARD_REDIS_MASTER_NAME = 'mymaster'
     RQ_DASHBOARD_REDIS_PASSWORD = REDISPASS
     RQ_DASHBOARD_REDIS_DB = '2'

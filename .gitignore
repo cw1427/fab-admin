@@ -23,7 +23,7 @@ app/__pycache__
 app/public/node_modules/*
 app/public/tests/*
 app/public/dist/*
-
+dist/*
 app/public/package-lock.json
 .vscode
 config_local.py

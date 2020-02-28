@@ -15,10 +15,64 @@ from fab_admin.console import cli_app
 log = logging.getLogger(appbuilder.get_app.config['LOG_NAME'])
 
 
+@cli_app.command("ssehb")
+def sse_heart_beat():
+    """The heart beat command to check the invalid subscribe."""
+    from fab_admin.addon.sse import sse
+    import datetime
+    click.echo('{0}:start sse heart beat polling.'.format(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+    with appbuilder.get_app.app_context():
+        sse.heart_beat()
+    click.echo('{0}:finish sse heart beat polling.'.format(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+
+
+@cli_app.command("syncauth")
+def sync_auth_redis():
+    """Try to sync fab auth structure data into redis"""
+    from app import redis_master
+    from fab_admin.models import MyUser
+    from sqlalchemy.orm import joinedload
+    from flask_appbuilder.security.sqla.models import Role, PermissionView, Permission, ViewMenu
+    import re
+    import datetime
+    with appbuilder.get_app.app_context():
+        # user list with joinedload roles by extinfo only need cache user with apikey.
+        users = appbuilder.get_session.query(MyUser).options(joinedload(MyUser.extinfo), joinedload(MyUser.roles)).all()
+        u_apik = {}
+        for u in users:
+            if u.extinfo and u.extinfo.api_key:
+                u_apik["apikey_" + u.extinfo.api_key] = u.to_json()
+                u_apik["apikey_" + u.extinfo.api_key]['extinfo'] = u.extinfo.to_json()
+                u_apik["apikey_" + u.extinfo.api_key]['roles'] = [r.to_json() for r in u.roles]
+                u_apik["apikey_" + u.extinfo.api_key]['cache'] = True
+        role_pv_subquery = appbuilder.get_session.query(Role, PermissionView.permission_id, \
+                        PermissionView.view_menu_id).outerjoin(Role.permissions).subquery()
+        role_pv = appbuilder.get_session.query(role_pv_subquery, Permission.name, ViewMenu.name). \
+                join(Permission).join(ViewMenu).all()
+        r_pv = {}
+        # the result would be tuple list like: (2, 'Public', 13, 36, 'menu_access', 'AutoDocumentsView')
+        # rejson doesn't support for jsonpath filter, change the structure index by p$v:role
+        for r in role_pv:
+            json_key = "{0}${1}".format(re.sub(appbuilder.get_app.config['FAB_AUTH_KEY_REPLACE_PATTERN'], '', r[4]), \
+                                        re.sub(appbuilder.get_app.config['FAB_AUTH_KEY_REPLACE_PATTERN'], '', r[5]))
+            if r_pv.get(json_key):
+                r_pv[json_key].append(r[1])
+            else:
+                r_pv[json_key] = [r[1]]
+        pipe = redis_master.pipeline()
+        pipe.jsonset(appbuilder.get_app.config['FAB_AUTH_REDIS_UAPIK_KEY'], '.', u_apik)
+        pipe.jsonset(appbuilder.get_app.config['FAB_AUTH_REDIS_RPV_KEY'], '.', r_pv)
+        pipe.expire(appbuilder.get_app.config['FAB_AUTH_REDIS_UAPIK_KEY'], 360)
+        pipe.expire(appbuilder.get_app.config['FAB_AUTH_REDIS_RPV_KEY'], 360)
+        pipe.execute()
+        click.echo('[{0}] finish sync auth in redis'.format(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+
+
 @cli_app.command("clone")
 @click.option('--name', '-n', default='fabadmin', help="The app name you want to created")
+@click.option('--address', '-a', default='localhost', help="The app front-end will call the backend address")
 @click.option('--force', '-f', is_flag=True, default=False, help="force clone if there already has app folder")
-def clone_fabadmin_app(name, force):
+def clone_fabadmin_app(name, address, force):
     """
         Clone a basic fab_admin app
     """
@@ -34,7 +88,7 @@ def clone_fabadmin_app(name, force):
         return
 
     render_data = {'app_name': name, 'now': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                   'secret_key': gen_salt(64), 'fab_admin_path': fab_admin.__path__[0]}
+                   'secret_key': gen_salt(64), 'fab_admin_path': fab_admin.__path__[0], 'address': address}
     template_path = os.path.join(fab_admin.__path__[0], 'app_templates')
     templateLoader = jinja2.FileSystemLoader(searchpath=template_path)
     templateEnv = jinja2.Environment(loader=templateLoader, variable_start_string='{*', variable_end_string='*}')
@@ -45,9 +99,11 @@ def clone_fabadmin_app(name, force):
             target_file_path = file_path.replace(template_path, os.getcwd())
             if ori_path.suffix in ['.pyc']:
                 continue
-            elif ori_path.suffix in ['.py', '.yml', '.bat', '.rst', '.gradle', '.sh', '.bash', '.json', '.vue',
-                '.properties'] or file_path in [os.path.join(template_path, 'app', 'public', 'public', 'index.html'),
-                                                os.path.join(template_path, 'app', 'public', 'vue.config.js')]:
+            elif ori_path.suffix in ['.conf', '.ini', '.py', '.yml', '.bat', '.rst', '.gradle', '.sh', '.bash', '.json', '.vue',
+                '.properties'] or file_path in [os.path.join(template_path, 'app', 'templates', 'vue', 'index.html'),
+                                                os.path.join(template_path, 'app', 'public', 'public', 'index.html'),
+                                                os.path.join(template_path, 'app', 'public', 'vue.config.js'),
+                                                os.path.join(template_path, 'app', 'public', 'config', 'url.js')]:
                 _render_file(templateEnv, file_path.replace(template_path, ''), target_file_path, render_data)
             elif ori_path.name in ['Dockerfile']:
                 _render_file(templateEnv, file_path.replace(template_path, ''), target_file_path, render_data)

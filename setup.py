@@ -18,8 +18,10 @@ def desc():
 
 def gather_package_data(folder_name):
     import glob
-    data_files = []
-    return glob.glob(f"{folder_name}/**", recursive=True)
+    data_files = glob.glob(f"{folder_name}/**", recursive=True)
+    hidden_files = glob.glob(f"{folder_name}/**/.*", recursive=True)
+    return data_files + hidden_files
+#     return (folder_name, data_files + hidden_files)
 
 setup(
     name='fab-admin',

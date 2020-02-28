@@ -32,12 +32,10 @@ RUN set -ex \
             libxslt-dev \
     && chmod +x /usr/local/bin/gosu
     #&& gosu nobody true \
-COPY ./docker/requirements.txt ./docker/entrypoint.sh ./docker/uwsgi.ini  /{* app_name *}/
+COPY ./docker/requirements.txt ./docker/entrypoint.sh ./docker/uwsgi.ini  ./docker/supervisord.conf   /{* app_name *}/
 RUN set -ex \
     && LIBRARY_PATH=/lib:/usr/lib /bin/sh -c "pip install --no-cache-dir -r /{* app_name *}/requirements.txt"
 COPY  . /{* app_name *}
-COPY fab_manager_overwrite/flask_appbuilder /usr/local/lib/python3.6/site-packages/flask_appbuilder
-COPY fab_manager_overwrite/flask_redis_sentinel.py /usr/local/lib/python3.6/site-packages/flask_redis_sentinel.py
 
 RUN chmod +x /{* app_name *}/entrypoint.sh
 WORKDIR /{* app_name *}
@@ -47,4 +45,5 @@ VOLUME /{* app_name *}/flask_session
 EXPOSE 8081
 ENTRYPOINT ["sh","/{* app_name *}/entrypoint.sh"]
 # Start supervisorctl
-CMD ["uwsgi", "--ini", "/{* app_name *}/uwsgi.ini", "--die-on-term"]
+#CMD ["uwsgi", "--ini", "/{* app_name *}/uwsgi.ini", "--die-on-term"]
+CMD ["/usr/local/bin/supervisord"]

@@ -1,6 +1,6 @@
 version: '3'
 services:
-  bas:
+  {* app_name *}:
     image: <your fab_admin app image registry>:<version>
     container_name: bas
     network_mode: host

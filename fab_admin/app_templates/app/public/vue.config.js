@@ -57,7 +57,7 @@ module.exports = {
                     'cp -r dist/css ../static/vue/',
                     'cp -r dist/img ../static/vue/',
                     'cp -r dist/js ../static/vue/',
-                    'cp dist/*.html ../templates/vue/',
+                    'cp dist/index.html ../templates/vue/',
                     'echo "DONE ... "'
                 ]
             }),
@@ -84,7 +84,7 @@ module.exports = {
     },
     devServer: {
         port: 8080,
-        host: 'localhost',
+        host: '{* address *}',
         contentBase: path.join(__dirname, 'dist'),
     }
 

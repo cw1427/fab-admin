@@ -32,9 +32,6 @@ app.extensions['sse_master'] = sse_master
 rq_redis_master, _ = redis_sentinel_client_factory(app, service_name=app.config['REDISSN'], config_prefix='RQ_REDIS')
 rq = RQ(app, client=rq_redis_master)
 from . import views, models
-if not app.config['APP_MODE'] == 'DEV':
-    # queues views need redis service avalible in product node
-    from . import queues_views
 if app.config.get('AUTO_UPDATE_PERM'):
     Base.metadata.create_all(appbuilder.get_session.get_bind(mapper=None, clause=None))
 if app.config.get('SECURITY_CLEANUP'):
@@ -45,7 +42,7 @@ if app.config.get('SECURITY_CLEANUP'):
 if app.config['APP_MODE'] == 'DEV':
     try:
         from flask_cors import CORS
-        CORS(app, resources=r'*', origins=r'http://localhost:8080', supports_credentials=True)
+        CORS(app, resources=r'*', origins=r'http://{* address *}:8080', supports_credentials=True)
 
         @app.after_request
         def process_response(response):

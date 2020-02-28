@@ -41,4 +41,5 @@ Deploy and install:
 
 - Make it Public::
 
-    python setup.py sdist upload -r pypi
+  - python setup.py sdist upload -r pypi
+  - twine upload pypi

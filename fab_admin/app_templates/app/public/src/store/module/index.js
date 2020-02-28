@@ -1,4 +1,5 @@
 import camelCase from 'lodash/camelCase'
+import config from '@/config'
 // Storing in variable a context with all files in this folder
 // ending with `.js`.
 const requireModule = require.context('.', false, /\.js$/)
