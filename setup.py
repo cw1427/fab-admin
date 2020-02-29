@@ -79,6 +79,7 @@ setup(
         "Flask-RQ2==18.3",
         "rq==1.0",
         "rq-dashboard==0.5.1",
+        "rq-scheduler==0.9",
         "rq-scheduler-dashboard==0.0.2",
         "Flask-CLI==0.4.0",
         "supervisor==4.0.3",

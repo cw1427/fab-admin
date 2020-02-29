@@ -184,8 +184,10 @@ class ServerSentEventsBlueprint(object):
             headers={'X-Accel-Buffering': 'no', 'chunked_transfer_encoding': 'off', 'Cache-Control': 'no-cache'}
         )
 
-    def heart_beat(self):
+    def heart_beat(self, redis_client=None):
         # get current all sse related channels
+        if redis_client:
+            self.redis = redis_client
         channels = self.redis.pubsub_channels(pattern='sse*')
         for channel in channels:
             message = Message('ping', type='heartbeat')

@@ -14,6 +14,7 @@ RUN echo https://mirrors.ustc.edu.cn/alpine/v3.8/main > /etc/apk/repositories; \
 RUN set -ex \
     && adduser -D -S -h /{* app_name *} -s /bin/sh -G ping ${APP_USER} \
     && apk add --no-cache --repository https://mirrors.ustc.edu.cn/alpine/v3.8/main --repository https://mirrors.ustc.edu.cn/alpine/v3.8/community  --allow-untrusted  --virtual .build-deps \
+            coreutils \
             libldap\
             gcc \
             make \

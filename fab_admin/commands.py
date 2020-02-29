@@ -18,6 +18,7 @@ log = logging.getLogger(appbuilder.get_app.config['LOG_NAME'])
 @cli_app.command("ssehb")
 def sse_heart_beat():
     """The heart beat command to check the invalid subscribe."""
+    from app import appbuilder, redis_master
     from fab_admin.addon.sse import sse
     import datetime
     click.echo('{0}:start sse heart beat polling.'.format(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
@@ -29,7 +30,7 @@ def sse_heart_beat():
 @cli_app.command("syncauth")
 def sync_auth_redis():
     """Try to sync fab auth structure data into redis"""
-    from app import redis_master
+    from app import appbuilder, redis_master
     from fab_admin.models import MyUser
     from sqlalchemy.orm import joinedload
     from flask_appbuilder.security.sqla.models import Role, PermissionView, Permission, ViewMenu
