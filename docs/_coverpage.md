@@ -2,15 +2,15 @@
 
 ![logo](img/fab.jpg)
 
-# Fab_admin <small>0.1.0</small>
+# Fab-admin <small>0.1.5</small>
 
-> A flask_appbuild web app framework extensioin fab_admin.
+> A flask_appbuild extension basic app named: fab-admin.
 
-- fab_admin the flask, flask_appbuild based web appframework.
-- fab_admin_addon.
-- Front-end Iview
+- Flask, Flask-appbuild, Flask-extensions*.
+- VUE, IVIEW.
 - Redis
 - RQ
+- SSE (Server Sent Event)
 
 [fab_admin_addon docs](fab_admin_addon/README.md)
 [fab_admin framework docs](#main)

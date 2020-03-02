@@ -47,9 +47,12 @@ def redis_sentinel_client_factory(app, service_name='mymaster', config_prefix='R
         # default redis client without sentinel
         from flask_redis import FlaskRedis
         from fab_admin.models import CustomJsonEncoder
-        redis_master = redis_slave = FlaskRedis.from_custom_provider(redis_client, app, decode_responses=True)
-        redis_master.setEncoder(CustomJsonEncoder())
-        redis_slave.setEncoder(CustomJsonEncoder())
+        if config_prefix in ['RQ_REDIS']:
+            redis_master = redis_slave = FlaskRedis.from_custom_provider(redis_client, app, decode_responses=False)
+        else:
+            redis_master = redis_slave = FlaskRedis.from_custom_provider(redis_client, app, decode_responses=True)
+            redis_master.setEncoder(CustomJsonEncoder())
+            redis_slave.setEncoder(CustomJsonEncoder())
 #         redis_master = redis_slave = redis_sentinel.default_connection
     else:
         redis_sentinel = SentinelExtension(app=app, config_prefix=config_prefix, client_class=redis_client,

@@ -1,44 +1,45 @@
-Fab-admin a flask_appbuilder app skeleton
-=================
+Fab-admin
+==========
+> A full stack Flask app generator based on [Flask-appbuilder](https://github.com/dpgaspar/Flask-AppBuilder),
+[Redis](https://redis.io/) and [VUE-IView]()
 
- Quick start:
- ------------
+ What is it:
+ -----------
 
-- pip install fab_admin
-- Init step
-  - 1. cd to a empty folder
-  - 2. fab_admin clone
-  - 3. fab_admin run --port 8080
+fab-admin is one app gererator based on flask-appbuild, it brings pure front-end structure based on VUE UI named
+[IVIEW](http://iview.talkingdata.com).
+It has several built-in commands to help generate a Flask app and be convinent for development.
 
+> UI a glance
 
+![Login page](./img/fab_login_page.jpg)
 
+![Login page](./img/fab_home_page.jpg)
 
-- Features
+Features
+--------
  - Front-end based on VUE IVIEW
  - Redis
- - RQ
- - Schedule
- - SSE
- - GraphQL
- - Mail
- - Addon
+ - RQ (Redis Queue)
+ - Scheduler
+ - SSE (Server-Sent-Event)
+ - Docker
+ - LDAP
+ - UWSGI
+ - Bootstrap Table
 
 Depends on:
 -----------
 
 - flask
-- click
-- colorama
-- flask-sqlalchemy
-- flask-login
-- flask-openid
-- flask-wtform
-- flask-Babel
+- flask-appbuilder
+- Redis
+- Sqlalchemy
+- RQ
+- VUE
+- IView-admin
 
-Deploy and install:
+Deployment and Open source:
+---------------------------
 
-- python setup.py sdist --formats=gztar,zip
-
-- Make it Public::
-
-    python setup.py sdist upload -r pypi
+Deployed it into pypi: [fab-admin](https://pypi.org/project/fab-admin/)

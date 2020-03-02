@@ -43,3 +43,10 @@ Deploy and install:
 
   - python setup.py sdist upload -r pypi
   - twine upload pypi
+  
+> docsify
+
+  - Running up dosify by command
+```javascript
+$ docsify serve ./docs/
+```
