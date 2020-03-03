@@ -93,7 +93,7 @@ We will see a list of commands above, there is one command: fab-admin clone. As 
 As default fabadmin has the compiled front-end code with:  localhost as the backend address. So if you do the trial on your
 localhost, you can directly bring it without recompile the front-end code.
 
-### Trial in the localhost
+### Serve in the localhost
 
  - Step 1: Clone an app with your app_name as below:
  
@@ -130,59 +130,60 @@ Admin User admin created.
  After your admin account created, you can successfully login your app.
 ![Login page](./img/fab_home_page.jpg)
  
+## Serve in remote server
 
+If you are trying to serve fab-admin on a remote server, or you want to start develop, you have to know how to compile
+the front-end code and how to start up as development mode.
 
-## Front-end env install
+### Clone app with remote server address
 
-fabadmin front-end bepends on VUE IVIEW, so you have to install nodejs with npm to run the front-end code in dev mode.
+fabadmin clone command has a specific option "-a" to appoint the remote address. Like for example, if your remote server
+IP is: 10.4.69.103, you can try run below command to assign the specific address.
 
-- install nodejs 12.x
+```linux
+$fabadmin clone -n cwtest -a  10.4.69.103
+```
+
+### Compile the front-end code
+
+- Step 1: Install nodejs 12.x
+
+Fabadmin front-end depends on VUE IVIEW, so you have to install nodejs with npm to compile the front-end code.
 
 ```bash
 curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 apt-get install nodejs
 ```
 
-- cd your fabadmin app folder, and install npm packages
+- Cd your app folder and install npm packages
 
-for example your temp folder named: fabadmin, after you bring up fabadmin, you will find app/public folder.
+for example your test folder named: cwtest, after you complete the above clone action [`Clone app`](#clone-app-with-remote-server-address),
+you will find app/public folder. You can refer below command to install npm modules
 
 ```bash
-cd ~/sandbox/fabadmin/app/public
+cd ~/cwtest/app/public
 npm install
 ```
 
-> run fabadmin in dev mod
+- Compile front-end
 
 As default we have front-end code point to http://localhost:8080 as the base url, so we can successfully run fabadmin in prod mod as above:  fabadmin run --port 8080
 But, if you can't run in localhost domain, or you want to start develop mode, please refer below code:
 
-```python
-1. adjust front base url in app/public/config/url.js
-
-const DEV_URL = 'http://<your server ip>:8081/'
-
-2. adjust front config dev server address in app/public/vue.config.js
-
-    devServer: {
-        port: 8080,
-        *host: '<your server ip>',*
-        contentBase: path.join(__dirname, 'dist'),
-    }
-
-
-2. bring up fabadmin backend:
-
-fabadmin run --port 8081
-
-3. compile front-end code as develop mode: run below code in app/public/ folder
-
-npx vue-cli-service serve
+```linux
+npm run build
 
 ```
 
+- Bring up app with flask develop mode
 
+```linux
+fabadmin run --port 8080
+```
 
+If everything work well, you will see below login page:
+![Login page](./img/fab_login_page.jpg)
 
+- Create admin account
 
-
+For this step, it should be the same as below [Serve in local - Step 4](#Serve-in-the-localhost)

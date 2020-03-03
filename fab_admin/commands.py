@@ -89,7 +89,8 @@ def clone_fabadmin_app(name, address, force):
         return
 
     render_data = {'app_name': name, 'now': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                   'secret_key': gen_salt(64), 'fab_admin_path': fab_admin.__path__[0], 'address': address}
+                   'secret_key': gen_salt(64), 'fab_admin_path': fab_admin.__path__[0], 'address': address,
+                   'cwd': os.getcwd()}
     template_path = os.path.join(fab_admin.__path__[0], 'app_templates')
     templateLoader = jinja2.FileSystemLoader(searchpath=template_path)
     templateEnv = jinja2.Environment(loader=templateLoader, variable_start_string='{*', variable_end_string='*}')
