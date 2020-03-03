@@ -1,6 +1,6 @@
 <!-- _coverpage.md -->
 
-![logo](img/fab.jpg)
+![logo](./img/fab.jpg)
 
 # Fab-admin <small>0.1.5</small>
 
