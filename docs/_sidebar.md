@@ -1,5 +1,6 @@
 * [Home](/)
-- [fab-admin](README.md)
+- [Fab-admin](README.md)
 - [Quick start](install.md)
+- [Develop guide](develop.md)
 - [Deploy with uWSGI](deploy.md)
 - [Main](MAIN_README.md)

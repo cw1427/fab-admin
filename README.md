@@ -3,6 +3,8 @@ Fab-admin
 > A full stack Flask app generator based on [Flask-appbuilder](https://github.com/dpgaspar/Flask-AppBuilder),
 [Redis](https://redis.io/) and [VUE-IView]()
 
+> [Guide doc](https://cw1427.github.io/fab-admin/)
+
  What is it:
  -----------
 
@@ -10,23 +12,22 @@ fab-admin is one app gererator based on flask-appbuild, it brings pure front-end
 [IVIEW](http://iview.talkingdata.com).
 It has several built-in commands to help generate a Flask app and be convinent for development.
 
-#[Guide doc](https://cw1427.github.io/fab-admin/)
 
 > UI a glance
 
-![Login page](./img/fab_login_page.jpg)
+![Login page](./docs/img/fab_login_page.jpg)
 
-![Login page](./img/fab_home_page.jpg)
+![Login page](./docs/img/fab_home_page.jpg)
 
-![Login page](./img/fab_security_user.jpg)
+![Login page](./docs/img/fab_security_user.jpg)
 
 > Easily switch between original UI and IVIEW
 
 There is a switch link under the menu tree as below:
 
-![Login page](./img/ui_switch_link.jpg)
+![Login page](./docs/img/ui_switch_link.jpg)
 
-![Login page](./img/flask_appbuilder_default_ui.jpg)
+![Login page](./docs/img/flask_appbuilder_default_ui.jpg)
 
 
 Features
