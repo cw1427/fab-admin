@@ -33,7 +33,7 @@ module.exports = {
             .set('_conf', resolve('config'))
             .set('#', '{* fab_admin_path | replace("\\","/") *}' + '/addon')
         config.module.rule('fonts')
-            .test(/\.(woff2?|eot|ttf|otf)(\?.*)?$/i)
+            .test(/\.(woff2?|eot|ttf|otf|svg)(\?.*)?$/i)
             .use('url-loader')
             .loader('url-loader')
             .options({
@@ -60,7 +60,7 @@ module.exports = {
                     'cp dist/index.html ../templates/vue/',
                     'echo "DONE ... "'
                 ]
-            }),
+            }),/*
             new CopyWebpackPlugin([{
                     context: './dist',
                     from: '**',
@@ -74,7 +74,7 @@ module.exports = {
                     toType: "file",
                     force: true
                 }
-            ]),
+            ]),*/
             new webpack.ProvidePlugin({
                 jQuery: "jquery",
                 $: "jquery",

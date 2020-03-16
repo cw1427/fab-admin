@@ -112,6 +112,17 @@ export default [{
                     title: 'List benchmark'
                 },
                 component: SampleBenchmark
+            },
+            {
+                path: 'echart',
+                name: 'sample_echart',
+                meta: {
+                    icon: 'ios-flower',
+                    title: 'echart',
+                    componentName:'sample_echart',
+                    access: ['Admin']
+                },
+                component:  () => import ('@/view/sample/echart')
             }
         ]
 
