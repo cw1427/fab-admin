@@ -40,6 +40,7 @@ module.exports = {
                 name: `fonts/[name].[hash:8].[ext]`,
                 publicPath: BASE_URL
             })
+        config.resolve.symlinks(false)
     },
     css: {
         extract: true,

@@ -1,37 +1,41 @@
 {
-    "compilerOptions": {
-      "target": "esnext",
-      "module": "esnext",
-      "allowJs": true,
-      "strict": true,
-      "jsx": "preserve",
-      "moduleResolution": "node",
-      "noImplicitAny": false,
-      "noImplicitThis": false,
-      "noImplicitReturns": false,
-      "allowSyntheticDefaultImports": true,
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "strictNullChecks": true,
-      "resolveJsonModule": false,
-      "sourceMap": true,
-      "baseUrl": ".",
-      "types": ["webpack-env", "jest", "iview","jquery"],
-      "paths": {
-        "@/*": ["src/*"],
-        "_c/*": ["src/components/*"],
-        "_conf/*": ["config/*"]
-      },
-      "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "allowJs": true,
+    "strict": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "noImplicitReturns": false,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": false,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": ["webpack-env", "jest", "iview","jquery"],
+    "paths": {
+      "@/*": ["src/*"],
+      "_c/*": ["src/components/*"],
+      "_conf/*": ["config/*"],
+      "#/*": ["e:/opt/private/cw1427/fab-admin/fab_admin/addon/*"]
     },
-    "include": [
-      "config/*.ts",
-      "src/**/*.ts",
-      "src/**/*.js",
-      "src/**/*.tsx",
-      "src/**/*.vue"
-    ],
-    "exclude": [
-      "node_modules"
-    ]
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  },
+  "include": [
+    "config/*.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "e:/opt/private/cw1427/fab-admin/fab_admin/addon/**/*.ts",
+    "e:/opt/private/cw1427/fab-admin/fab_admin/addon/**/*.vue",
+    "e:/opt/private/cw1427/fab-admin/fab_admin/addon/**/*.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

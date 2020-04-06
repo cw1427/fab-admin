@@ -1,37 +1,43 @@
 {
-    "compilerOptions": {
-      "target": "esnext",
-      "module": "esnext",
-      "allowJs": true,
-      "strict": true,
-      "jsx": "preserve",
-      "moduleResolution": "node",
-      "noImplicitAny": false,
-      "noImplicitThis": false,
-      "noImplicitReturns": false,
-      "allowSyntheticDefaultImports": true,
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "strictNullChecks": true,
-      "resolveJsonModule": false,
-      "sourceMap": true,
-      "baseUrl": ".",
-      "types": ["webpack-env", "jest", "iview","jquery"],
-      "paths": {
-        "@/*": ["src/*"],
-        "_c/*": ["src/components/*"],
-        "_conf/*": ["config/*"]
-      },
-      "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "allowJs": true,
+    "strict": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "noImplicitReturns": false,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": false,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "rootDirs": [".","{* fab_admin_path | replace(\"\\\",\"/\") *}/addon/*"],
+    "types": ["webpack-env", "jest", "iview","jquery"],
+    "paths": {
+      "@/*": ["src/*"],
+      "_c/*": ["src/components/*"],
+      "_conf/*": ["config/*"],
+      "#/*": ["{* fab_admin_path | replace(\"\\\",\"/\") *}/addon/*"]
     },
-    "include": [
-      "config/*.ts",
-      "src/**/*.ts",
-      "src/**/*.js",
-      "src/**/*.tsx",
-      "src/**/*.vue"
-    ],
-    "exclude": [
-      "node_modules"
-    ]
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  },
+  "include": [
+    "config/*.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.vue"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

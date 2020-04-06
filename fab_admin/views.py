@@ -1,7 +1,7 @@
 """
-BSM common view  module.
+fabadmin common view  module.
 
-Created on 2018-2-3.
+Created on 2020-2-3.
 author: chenwen9.
 """
 from flask import render_template, session, request, g, jsonify

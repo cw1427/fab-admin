@@ -28,3 +28,4 @@ app/public/package-lock.json
 .vscode
 config_local.py
 fab_admin.egg-info
+build/*
