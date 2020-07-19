@@ -28,7 +28,7 @@ APP_VERSION = '%s:%s' % (APP_MODE, version.VERSION_STRING)
 SECURITY_CLEANUP = False
 AUTO_UPDATE_PERM = os.environ.get('AUTO_UPDATE_PERM', False)
 # redis credential on prod
-REDISSN = 'mymaster'
+REDISSN = 'mymain'
 REDISPASS = os.environ.get('REDIS_PASSWORD', config_local.REDISPASS if config_local else None)
 REDIS_URL = os.environ.get('REDIS_URL', \
                            "redis+sentinel://:{0}@localhost:26379/{1}/0".format(REDISPASS, REDISSN))

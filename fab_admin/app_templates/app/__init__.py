@@ -24,13 +24,13 @@ log = logging.getLogger(appbuilder.get_app.config['LOG_NAME'])
 autodoc = app.extensions['autodoc']
 app.config.setdefault('REDIS_ENCODER', CustomJsonEncoder())
 # primary redis clients
-redis_master, redis_slave = redis_sentinel_client_factory(app, service_name=app.config['REDISSN'])
+redis_main, redis_subordinate = redis_sentinel_client_factory(app, service_name=app.config['REDISSN'])
 # sse redis client
-sse_master, _ = redis_sentinel_client_factory(app, service_name=app.config['REDISSN'], config_prefix='SSE_REDIS')
-app.extensions['sse_master'] = sse_master
+sse_main, _ = redis_sentinel_client_factory(app, service_name=app.config['REDISSN'], config_prefix='SSE_REDIS')
+app.extensions['sse_main'] = sse_main
 # rq redis client
-rq_redis_master, _ = redis_sentinel_client_factory(app, service_name=app.config['REDISSN'], config_prefix='RQ_REDIS')
-rq = RQ(app, client=rq_redis_master)
+rq_redis_main, _ = redis_sentinel_client_factory(app, service_name=app.config['REDISSN'], config_prefix='RQ_REDIS')
+rq = RQ(app, client=rq_redis_main)
 from . import views, models
 if app.config.get('AUTO_UPDATE_PERM'):
     Base.metadata.create_all(appbuilder.get_session.get_bind(mapper=None, clause=None))
@@ -67,7 +67,7 @@ def load_user_from_request(request):
             from flask_appbuilder.security.sqla.models import Role
             if appbuilder.get_app.config['FAB_AUTH_REDIS_CACHE']:
                 # API-KEY auth and Redis cache enable
-                user_dict = redis_slave.jsonget(appbuilder.get_app.config['FAB_AUTH_REDIS_UAPIK_KEY'], \
+                user_dict = redis_subordinate.jsonget(appbuilder.get_app.config['FAB_AUTH_REDIS_UAPIK_KEY'], \
                                                 ".apikey_{0}".format(api_key))
                 if not user_dict:
                     raise Exception("cache missed")

@@ -34,7 +34,7 @@ def say_hi():
 # @cli_app.command("syncauth")
 # def sync_auth_redis():
 #     """Try to sync fab auth structure data into redis"""
-#     from . import redis_master
+#     from . import redis_main
 #     from fab_admin.models import MyUser
 #     from sqlalchemy.orm import joinedload
 #     from flask_appbuilder.security.sqla.models import Role, PermissionView, Permission, ViewMenu
@@ -64,7 +64,7 @@ def say_hi():
 #                 r_pv[json_key].append(r[1])
 #             else:
 #                 r_pv[json_key] = [r[1]]
-#         pipe = redis_master.pipeline()
+#         pipe = redis_main.pipeline()
 #         pipe.jsonset(appbuilder.get_app.config['FAB_AUTH_REDIS_UAPIK_KEY'], '.', u_apik)
 #         pipe.jsonset(appbuilder.get_app.config['FAB_AUTH_REDIS_RPV_KEY'], '.', r_pv)
 #         pipe.expire(appbuilder.get_app.config['FAB_AUTH_REDIS_UAPIK_KEY'], 360)

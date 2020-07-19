@@ -29,7 +29,7 @@ class BlockingSentinelConnectionPool(SentinelConnectionPool):
         return "%s<service=%s(%s)" % (
             type(self).__name__,
             self.service_name,
-            self.is_master and 'master' or 'slave',
+            self.is_main and 'main' or 'subordinate',
         )
 
     def reset(self):
@@ -45,8 +45,8 @@ class BlockingSentinelConnectionPool(SentinelConnectionPool):
         # Keep a list of actual connection instances so that we can
         # disconnect them later.
         self._connections = []
-        self.master_address = None
-        self.slave_rr_counter = None
+        self.main_address = None
+        self.subordinate_rr_counter = None
 
     def make_connection(self):
         "Make a fresh connection."
@@ -130,44 +130,44 @@ class MySentinel(Sentinel):
     self Sentinel class.
     """
 
-    def slave_for(self, service_name, redis_class=Redis, connection_pool_obj=None,
+    def subordinate_for(self, service_name, redis_class=Redis, connection_pool_obj=None,
                   connection_pool_class=SentinelConnectionPool, **kwargs):
         """
-        overwrite slave_for to split the connection_kwargs to the redis_class.
+        overwrite subordinate_for to split the connection_kwargs to the redis_class.
         """
-        kwargs['is_master'] = False
+        kwargs['is_main'] = False
         connection_kwargs = dict(self.connection_kwargs)
         connection_kwargs.update(kwargs)
         # split the conection_kwargs parameter to the redis_class
         base_args = inspect.getargspec(redis.client.Redis.__init__).args
-        base_args.append('is_master')
+        base_args.append('is_main')
         base_args.append('check_connection')
         extra_kwargs = {key: connection_kwargs[key] for key in connection_kwargs.keys() if key not in base_args}
         base_kwargs = {key: connection_kwargs[key] for key in connection_kwargs.keys() if key in base_args}
         if connection_pool_obj:
-            connection_pool_obj.is_master = base_kwargs.pop('is_master', True)
+            connection_pool_obj.is_main = base_kwargs.pop('is_main', True)
             connection_pool_obj.check_connection = base_kwargs.pop('check_connection', False)
             connection_pool_obj.connection_kwargs.update(base_kwargs)
             return redis_class(connection_pool=connection_pool_obj, **extra_kwargs)
         return redis_class(connection_pool=connection_pool_class(
             service_name, self, **base_kwargs), **extra_kwargs)
 
-    def master_for(self, service_name, redis_class=Redis, connection_pool_obj=None,
+    def main_for(self, service_name, redis_class=Redis, connection_pool_obj=None,
                    connection_pool_class=SentinelConnectionPool, **kwargs):
         """
-        overwrite master_for to setup the customize encoder.
+        overwrite main_for to setup the customize encoder.
         """
-        kwargs['is_master'] = True
+        kwargs['is_main'] = True
         connection_kwargs = dict(self.connection_kwargs)
         connection_kwargs.update(kwargs)
         # split the conection_kwargs parameter to the redis_class
         base_args = inspect.getargspec(redis.client.Redis.__init__).args
-        base_args.append('is_master')
+        base_args.append('is_main')
         base_args.append('check_connection')
         extra_kwargs = {key: connection_kwargs[key] for key in connection_kwargs.keys() if key not in base_args}
         base_kwargs = {key: connection_kwargs[key] for key in connection_kwargs.keys() if key in base_args}
         if connection_pool_obj:
-            connection_pool_obj.is_master = base_kwargs.pop('is_master', True)
+            connection_pool_obj.is_main = base_kwargs.pop('is_main', True)
             connection_pool_obj.check_connection = base_kwargs.pop('check_connection', False)
             connection_pool_obj.connection_kwargs.update(base_kwargs)
             return redis_class(connection_pool=connection_pool_obj, **extra_kwargs)

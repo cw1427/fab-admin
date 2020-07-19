@@ -43,14 +43,14 @@ def setup_rq_connection():
     if redis_url:
         current_app.redis_conn = from_url(redis_url)
     elif redis_sentinels:
-        redis_master = current_app.config.get('RQ_SCHEDULER_DASHBOARD_REDIS_MASTER_NAME')
+        redis_main = current_app.config.get('RQ_SCHEDULER_DASHBOARD_REDIS_MASTER_NAME')
         password = current_app.config.get('RQ_SCHEDULER_DASHBOARD_REDIS_PASSWORD')
         db = current_app.config.get('RQ_SCHEDULER_DASHBOARD_REDIS_DB')
         sentinel_hosts = [tuple(sentinel.split(':', 1))
                           for sentinel in redis_sentinels.split(',')]
 
         sentinel = Sentinel(sentinel_hosts, db=db, password=password)
-        current_app.redis_conn = sentinel.master_for(redis_master)
+        current_app.redis_conn = sentinel.main_for(redis_main)
     else:
         current_app.redis_conn = Redis(
             host=current_app.config.get('REDIS_HOST'),

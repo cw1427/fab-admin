@@ -235,10 +235,10 @@ def create_app(name, engine):
     try:
         if engine.lower() == 'sqlalchemy':
             url = urlopen(SQLA_REPO_URL)
-            dirname = "Flask-AppBuilder-Skeleton-master"
+            dirname = "Flask-AppBuilder-Skeleton-main"
         elif engine.lower() == 'mongoengine':
             url = urlopen(MONGOENGIE_REPO_URL)
-            dirname = "Flask-AppBuilder-Skeleton-me-master"
+            dirname = "Flask-AppBuilder-Skeleton-me-main"
         zipfile = ZipFile(BytesIO(url.read()))
         zipfile.extractall()
         os.rename(dirname, name)
@@ -261,7 +261,7 @@ def create_addon(name):
     """
     try:
         full_name = 'fab_addon_' + name
-        dirname = "Flask-AppBuilder-Skeleton-AddOn-master"
+        dirname = "Flask-AppBuilder-Skeleton-AddOn-main"
         url = urlopen(ADDON_REPO_URL)
         zipfile = ZipFile(BytesIO(url.read()))
         zipfile.extractall()

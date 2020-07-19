@@ -373,10 +373,10 @@ class SecurityManager(SecurityManager):
                 if self.appbuilder.get_app.config['FAB_AUTH_REDIS_CACHE_SCOPE'] == 'REST' and \
                     (not session.get('REST_SESSION', False)):
                     return super(SecurityManager, self)._has_view_access(user, permission_name, view_name)
-                from app import redis_slave
+                from app import redis_subordinate
                 from rejson.path import Path
                 import re
-                roles = redis_slave.jsonget(self.appbuilder.get_app.config['FAB_AUTH_REDIS_RPV_KEY'], \
+                roles = redis_subordinate.jsonget(self.appbuilder.get_app.config['FAB_AUTH_REDIS_RPV_KEY'], \
                         Path(".{0}${1}".format(re.sub(self.appbuilder.get_app.config['FAB_AUTH_KEY_REPLACE_PATTERN'], '', \
                         permission_name), re.sub(self.appbuilder.get_app.config['FAB_AUTH_KEY_REPLACE_PATTERN'], \
                         '', view_name))))

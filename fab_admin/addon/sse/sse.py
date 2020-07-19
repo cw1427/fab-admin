@@ -121,8 +121,8 @@ class ServerSentEventsBlueprint(object):
         # if not redis_url:
         #    raise KeyError("Must set a redis connection URL in app config.")
         # return StrictRedis.from_url(redis_url)
-        sse_master = current_app.extensions['sse_master']
-        return sse_master
+        sse_main = current_app.extensions['sse_main']
+        return sse_main
 
     def publish(self, data, type=None, id=None, retry=None, channel='sse'):
         """

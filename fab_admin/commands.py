@@ -18,7 +18,7 @@ log = logging.getLogger(appbuilder.get_app.config['LOG_NAME'])
 @cli_app.command("ssehb")
 def sse_heart_beat():
     """The heart beat command to check the invalid subscribe."""
-    from app import appbuilder, redis_master
+    from app import appbuilder, redis_main
     from fab_admin.addon.sse import sse
     import datetime
     click.echo('{0}:start sse heart beat polling.'.format(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
@@ -30,7 +30,7 @@ def sse_heart_beat():
 @cli_app.command("syncauth")
 def sync_auth_redis():
     """Try to sync fab auth structure data into redis"""
-    from app import appbuilder, redis_master
+    from app import appbuilder, redis_main
     from fab_admin.models import MyUser
     from sqlalchemy.orm import joinedload
     from flask_appbuilder.security.sqla.models import Role, PermissionView, Permission, ViewMenu
@@ -60,7 +60,7 @@ def sync_auth_redis():
                 r_pv[json_key].append(r[1])
             else:
                 r_pv[json_key] = [r[1]]
-        pipe = redis_master.pipeline()
+        pipe = redis_main.pipeline()
         pipe.jsonset(appbuilder.get_app.config['FAB_AUTH_REDIS_UAPIK_KEY'], '.', u_apik)
         pipe.jsonset(appbuilder.get_app.config['FAB_AUTH_REDIS_RPV_KEY'], '.', r_pv)
         pipe.expire(appbuilder.get_app.config['FAB_AUTH_REDIS_UAPIK_KEY'], 360)

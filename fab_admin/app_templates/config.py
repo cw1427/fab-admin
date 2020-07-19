@@ -12,7 +12,7 @@ from config_base import version, config_local
 class config(config_base.config):
     """Customize your config."""
     SECRET_KEY = '{* secret_key *}'
-    REDISSN = 'mymaster'
+    REDISSN = 'mymain'
     REDISPASS = os.environ.get('REDIS_PASSWORD', config_local.REDISPASS if config_local else None)
     # default just use Redis schema, but we support for redis+sentinel schema
     REDIS_URL = os.environ.get('REDIS_URL', \
