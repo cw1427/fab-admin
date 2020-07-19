@@ -155,7 +155,7 @@ class config(object):
     COMMON_LOCAL_USER_VIEW = ['UserInfoEditView', 'ResetMyPasswordView']
 
     #---config center config items
-    REDISSN = 'mymaster'
+    REDISSN = 'mymain'
     REDISPASS = os.environ.get('REDIS_PASSWORD', config_local.REDISPASS if config_local else None)
     REDIS_URL = os.environ.get('REDIS_URL', "redis+sentinel://:{0}@localhost:26379/{1}/0".format(REDISPASS, REDISSN))
     REDIS_DECODE_RESPONSES = True
@@ -172,7 +172,7 @@ class config(object):
     RQ_REDIS_URL = os.environ.get('RQ_REDIS_URL', \
                                   "redis+sentinel://:{0}@localhost:26379/{1}/2".format(REDISPASS, REDISSN))
     RQ_DASHBOARD_REDIS_SENTINELS = 'localhost:26379'
-    RQ_DASHBOARD_REDIS_MASTER_NAME = 'mymaster'
+    RQ_DASHBOARD_REDIS_MASTER_NAME = 'mymain'
     RQ_DASHBOARD_REDIS_PASSWORD = REDISPASS
     RQ_DASHBOARD_REDIS_DB = '2'
     RQ_DASHBOARD_POLL_INTERVAL = 2500  # : Web interface poll period for updates in ms

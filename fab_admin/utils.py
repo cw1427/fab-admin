@@ -40,7 +40,7 @@ def create_app(config, app_name='fabadmin'):
                             update_perms=app.config['AUTO_UPDATE_PERM'], indexview=security_manager.IndexView)
 
 
-def redis_sentinel_client_factory(app, service_name='mymaster', config_prefix='REDIS'):
+def redis_sentinel_client_factory(app, service_name='mymain', config_prefix='REDIS'):
     """sentinel redis client factory method"""
     parsed_url = urllib.parse.urlparse(app.config.get(f"{config_prefix}_URL"))
     if parsed_url.scheme != 'redis+sentinel':
@@ -48,20 +48,20 @@ def redis_sentinel_client_factory(app, service_name='mymaster', config_prefix='R
         from flask_redis import FlaskRedis
         from fab_admin.models import CustomJsonEncoder
         if config_prefix in ['RQ_REDIS']:
-            redis_master = redis_slave = FlaskRedis.from_custom_provider(redis_client, app, decode_responses=False)
+            redis_main = redis_subordinate = FlaskRedis.from_custom_provider(redis_client, app, decode_responses=False)
         else:
-            redis_master = redis_slave = FlaskRedis.from_custom_provider(redis_client, app, decode_responses=True)
-            redis_master.setEncoder(CustomJsonEncoder())
-            redis_slave.setEncoder(CustomJsonEncoder())
-#         redis_master = redis_slave = redis_sentinel.default_connection
+            redis_main = redis_subordinate = FlaskRedis.from_custom_provider(redis_client, app, decode_responses=True)
+            redis_main.setEncoder(CustomJsonEncoder())
+            redis_subordinate.setEncoder(CustomJsonEncoder())
+#         redis_main = redis_subordinate = redis_sentinel.default_connection
     else:
         redis_sentinel = SentinelExtension(app=app, config_prefix=config_prefix, client_class=redis_client,
                                        sentinel_class=MySentinel)
-        redis_master_cp = BlockingSentinelConnectionPool(service_name, redis_sentinel.sentinel)
-        redis_master = redis_sentinel.master_for(service_name, connection_pool_obj=redis_master_cp)
-        redis_slave_cp = BlockingSentinelConnectionPool(service_name, redis_sentinel.sentinel)
-        redis_slave = redis_sentinel.slave_for(service_name, connection_pool_obj=redis_slave_cp)
-    return redis_master, redis_slave
+        redis_main_cp = BlockingSentinelConnectionPool(service_name, redis_sentinel.sentinel)
+        redis_main = redis_sentinel.main_for(service_name, connection_pool_obj=redis_main_cp)
+        redis_subordinate_cp = BlockingSentinelConnectionPool(service_name, redis_sentinel.sentinel)
+        redis_subordinate = redis_sentinel.subordinate_for(service_name, connection_pool_obj=redis_subordinate_cp)
+    return redis_main, redis_subordinate
 
 
 def dynamic_import_by_patten(path, patten, module_prefix='app'):

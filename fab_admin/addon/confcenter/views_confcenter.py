@@ -4,7 +4,7 @@ Configuration Center View layer
 @author: chenwen9
 """
 import logging
-from app import appbuilder, autodoc, redis_master, redis_slave
+from app import appbuilder, autodoc, redis_main, redis_subordinate
 from fab_admin.models import ConfItem
 from flask_appbuilder.baseviews import expose, BaseView
 from flask_appbuilder.security.decorators import has_access_api, permission_name
@@ -32,10 +32,10 @@ class ConfCenterView(BaseView):
     def add_project(self, project=None):
         """Add confcenter project api method."""
         if project and not ' ' in project:
-            if redis_slave.sismember(CONF_PROJECTS_KEY_FORMAT, project):
+            if redis_subordinate.sismember(CONF_PROJECTS_KEY_FORMAT, project):
                 return jsonify({'message': 'project name exists'}), 400
             else:
-                pipe = redis_master.pipeline()
+                pipe = redis_main.pipeline()
                 pipe.sadd(CONF_PROJECTS_KEY_FORMAT, project)
                 pipe.sadd(CONF_PROJECT_WRITE_PERM_FORMAT.format(p=project), g.user.username)
                 pipe.sadd(CONF_PROJECT_READ_PERM_FORMAT.format(p=project), g.user.username)
@@ -52,7 +52,7 @@ class ConfCenterView(BaseView):
         """fetch all of the project lists by permission."""
         #---scan the projects key
         available_proj = []
-        for proj in redis_slave.sscan_iter(CONF_PROJECTS_KEY_FORMAT):
+        for proj in redis_subordinate.sscan_iter(CONF_PROJECTS_KEY_FORMAT):
             if self._check_conf_permission(proj, 'read'):
                 available_proj.append(proj)
         return jsonify({'code': 200, 'data': available_proj})
@@ -62,7 +62,7 @@ class ConfCenterView(BaseView):
     @permission_name('confcenterWrite')
     def add_configs_byproject(self, project):
         """add config item by project api method."""
-        if redis_slave.sismember(CONF_PROJECTS_KEY_FORMAT, project):
+        if redis_subordinate.sismember(CONF_PROJECTS_KEY_FORMAT, project):
             if self._check_conf_permission(project, 'write'):
                 data = request.get_json()
                 if data.get('name') and data.get('value'):
@@ -73,7 +73,7 @@ class ConfCenterView(BaseView):
                             value = data.get('value')
                         item = ConfItem(project, data.get('name'), value)
                         #---we are going to use rejson to wrap the use custmize config item value into JSON type
-                        pipe = redis_master.pipeline()
+                        pipe = redis_main.pipeline()
                         pipe.jsonset(CONF_KEY_FORMAT.format(p=project, k=data.get('name')), '.', item)
                         pipe.sadd(CONF_PROJECT_KEYSET_FORMAT.format(p=project), data.get('name'))
                         pipe.execute()
@@ -94,24 +94,24 @@ class ConfCenterView(BaseView):
     @permission_name('confcenterWrite')
     def update_configs_byproject(self, project):
         """update config value by project and config key."""
-        if redis_slave.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
+        if redis_subordinate.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
             if self._check_conf_permission(project, 'write'):
                 data = request.get_json()
                 if data.get('name') and data.get('value'):
                     if self._check_conf_exists(project, data['name']):
                         #---key history is a kind of json list, which item is one of the ConfItem value.
-                        ori_item = redis_slave.jsonget(CONF_KEY_FORMAT.format(p=project, k=data.get('name')))
-                        if redis_slave.exists(CONF_KEY_HISTORY_LIST_FORMAT.format(p=project, k=data.get('name'))):
-                            redis_master.jsonarrinsert(CONF_KEY_HISTORY_LIST_FORMAT.format(p=project, \
+                        ori_item = redis_subordinate.jsonget(CONF_KEY_FORMAT.format(p=project, k=data.get('name')))
+                        if redis_subordinate.exists(CONF_KEY_HISTORY_LIST_FORMAT.format(p=project, k=data.get('name'))):
+                            redis_main.jsonarrinsert(CONF_KEY_HISTORY_LIST_FORMAT.format(p=project, \
                                                                                 k=data.get('name')), '.', 0, ori_item)
                         else:
-                            redis_master.jsonset(CONF_KEY_HISTORY_LIST_FORMAT.format(p=project, k=data.get('name')), \
+                            redis_main.jsonset(CONF_KEY_HISTORY_LIST_FORMAT.format(p=project, k=data.get('name')), \
                                                  '.', [ori_item])
                         try:
                             value = json.loads(data.get('value'))
                         except Exception:
                             value = data.get('value')
-                        pipe = redis_master.pipeline()
+                        pipe = redis_main.pipeline()
                         pipe.jsonset(CONF_KEY_FORMAT.format(p=project, k=data.get('name')), '.value', value)
                         pipe.jsonset(CONF_KEY_FORMAT.format(p=project, k=data.get('name')), '.changed_on', time.time())
                         pipe.jsonset(CONF_KEY_FORMAT.format(p=project, k=data.get('name')), '.changed_by', \
@@ -150,10 +150,10 @@ class ConfCenterView(BaseView):
                     }
         }
         """
-        if redis_slave.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
+        if redis_subordinate.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
             if self._check_conf_permission(project, 'read'):
                 try:
-                    value = redis_slave.jsonget(CONF_KEY_FORMAT.format(p=project, k=name), '.value')
+                    value = redis_subordinate.jsonget(CONF_KEY_FORMAT.format(p=project, k=name), '.value')
                     if value:
                         return jsonify({'data': value})
                     else:
@@ -171,12 +171,12 @@ class ConfCenterView(BaseView):
     @permission_name('confcenterRead')
     def get_allconfig_byproject(self, project):
         """get all config item by project name."""
-        if redis_slave.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
+        if redis_subordinate.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
             if self._check_conf_permission(project, 'read'):
                 try:
                     confs = []
-                    for key in redis_slave.sscan_iter(CONF_PROJECT_KEYSET_FORMAT.format(p=project)):
-                        confs.append(redis_slave.jsonget(CONF_KEY_FORMAT.format(p=project, k=key)))
+                    for key in redis_subordinate.sscan_iter(CONF_PROJECT_KEYSET_FORMAT.format(p=project)):
+                        confs.append(redis_subordinate.jsonget(CONF_KEY_FORMAT.format(p=project, k=key)))
                     return jsonify({'data': confs})
                 except Exception as e:
                     log.error(e)
@@ -190,9 +190,9 @@ class ConfCenterView(BaseView):
     @has_access_api
     def get_project_permission(self, project):
         """get the project permission list reader and writer."""
-        if redis_slave.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
-            writer = redis_slave.smembers(CONF_PROJECT_WRITE_PERM_FORMAT.format(p=project))
-            reader = redis_slave.smembers(CONF_PROJECT_READ_PERM_FORMAT.format(p=project))
+        if redis_subordinate.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
+            writer = redis_subordinate.smembers(CONF_PROJECT_WRITE_PERM_FORMAT.format(p=project))
+            reader = redis_subordinate.smembers(CONF_PROJECT_READ_PERM_FORMAT.format(p=project))
             return jsonify({"reader": list(reader), "writer": list(writer)})
         else:
             return jsonify({'message': 'project doesn\'t exists'}), 400
@@ -201,7 +201,7 @@ class ConfCenterView(BaseView):
     @has_access_api
     def update_project_permission(self, project):
         """update project permission list by project and the permision catagory."""
-        if redis_slave.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
+        if redis_subordinate.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
             data = request.get_json()
             if data.get('perm') and data.get('users'):
                 if data.get('perm') == 'write':
@@ -210,7 +210,7 @@ class ConfCenterView(BaseView):
                     conf_proj_perm_key = CONF_PROJECT_READ_PERM_FORMAT
                 else:
                     return jsonify({'message': 'wrong permission params'}), 400
-                pipe = redis_master.pipeline()
+                pipe = redis_main.pipeline()
                 pipe.delete(conf_proj_perm_key.format(p=project))
                 pipe.sadd(conf_proj_perm_key.format(p=project), *data.get('users'))
                 pipe.execute()
@@ -227,13 +227,13 @@ class ConfCenterView(BaseView):
     @permission_name('confcenterWrite')
     def del_config_byproject(self, project, name):
         """delte config by project name."""
-        if redis_slave.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
+        if redis_subordinate.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
             if self._check_conf_permission(project, 'write'):
                 try:
                     #----delete the project item and its history
                     del_keys = [CONF_KEY_FORMAT.format(p=project, k=name), \
                                 CONF_KEY_HISTORY_LIST_FORMAT.format(p=project, k=name)]
-                    pipe = redis_master.pipeline()
+                    pipe = redis_main.pipeline()
                     pipe.delete(*del_keys)
                     pipe.srem(CONF_PROJECT_KEYSET_FORMAT.format(p=project), name)
                     pipe.execute()
@@ -253,18 +253,18 @@ class ConfCenterView(BaseView):
     @permission_name('confcenterWrite')
     def del_project_byname(self, project):
         """delte all the project by name."""
-        if redis_slave.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
+        if redis_subordinate.sismember(CONF_PROJECTS_KEY_FORMAT, project.strip()):
             if self._check_conf_permission(project, 'write'):
                 try:
                     #----get this projects keyset
-                    keys = redis_slave.smembers(CONF_PROJECT_KEYSET_FORMAT.format(p=project))
+                    keys = redis_subordinate.smembers(CONF_PROJECT_KEYSET_FORMAT.format(p=project))
                     for name in keys:
                         del_keys = [CONF_KEY_FORMAT.format(p=project, k=name), CONF_KEY_HISTORY_LIST_FORMAT. \
                                     format(p=project, k=name)]
-                        redis_master.delete(*del_keys)
-                    redis_master.delete(CONF_PROJECT_KEYSET_FORMAT.format(p=project), CONF_PROJECT_WRITE_PERM_FORMAT. \
+                        redis_main.delete(*del_keys)
+                    redis_main.delete(CONF_PROJECT_KEYSET_FORMAT.format(p=project), CONF_PROJECT_WRITE_PERM_FORMAT. \
                                         format(p=project), CONF_PROJECT_READ_PERM_FORMAT.format(p=project))
-                    redis_master.srem(CONF_PROJECTS_KEY_FORMAT, project)
+                    redis_main.srem(CONF_PROJECTS_KEY_FORMAT, project)
                     log.info("Successfully delete project byname for project {p} by {u}".format(p=project, \
                                                                                                 u=g.user.username))
                     return jsonify({'message': 'success'})
@@ -282,11 +282,11 @@ class ConfCenterView(BaseView):
         for role in g.user.roles:
             if appbuilder.get_app.config['AUTH_ROLE_ADMIN'] == role.name:
                 return True
-        return redis_slave.sismember("cfg:{0}:perm:{1}".format(project, perm), g.user.username)
+        return redis_subordinate.sismember("cfg:{0}:perm:{1}".format(project, perm), g.user.username)
 
     def _check_conf_exists(self, project, key):
         """inner method check config exists or not."""
-        return redis_slave.exists(CONF_KEY_FORMAT.format(p=project, k=key))
+        return redis_subordinate.exists(CONF_KEY_FORMAT.format(p=project, k=key))
 
 
 appbuilder.add_view_no_menu(ConfCenterView)

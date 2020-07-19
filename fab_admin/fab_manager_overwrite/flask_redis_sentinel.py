@@ -61,43 +61,43 @@ class RedisSentinelInstance(object):
     def default_connection(self):
         return self._connect()[1]
 
-    def master_for(self, service_name, **kwargs):
+    def main_for(self, service_name, **kwargs):
         try:
-            return self.local.master_connections[service_name]
+            return self.local.main_connections[service_name]
         except AttributeError:
-            self.local.master_connections = {}
+            self.local.main_connections = {}
         except KeyError:
             pass
 
         sentinel = self.sentinel
         if sentinel is None:
-            msg = 'Cannot get master {} using non-sentinel configuration'
+            msg = 'Cannot get main {} using non-sentinel configuration'
             raise RuntimeError(msg.format(service_name))
 
-        conn = sentinel.master_for(service_name, redis_class=self.client_class, **kwargs)
-        self.local.master_connections[service_name] = conn
+        conn = sentinel.main_for(service_name, redis_class=self.client_class, **kwargs)
+        self.local.main_connections[service_name] = conn
         return conn
 
-    def slave_for(self, service_name, **kwargs):
+    def subordinate_for(self, service_name, **kwargs):
         try:
-            return self.local.slave_connections[service_name]
+            return self.local.subordinate_connections[service_name]
         except AttributeError:
-            self.local.slave_connections = {}
+            self.local.subordinate_connections = {}
         except KeyError:
             pass
 
         sentinel = self.sentinel
         if sentinel is None:
-            msg = 'Cannot get slave {} using non-sentinel configuration'
+            msg = 'Cannot get subordinate {} using non-sentinel configuration'
             raise RuntimeError(msg.format(service_name))
 
-        conn = sentinel.slave_for(service_name, redis_class=self.client_class, **kwargs)
-        self.local.slave_connections[service_name] = conn
+        conn = sentinel.subordinate_for(service_name, redis_class=self.client_class, **kwargs)
+        self.local.subordinate_connections[service_name] = conn
         return conn
 
 
 class RedisSentinel(object):
-    """Flask extension that supports connections to master using Redis Sentinel.
+    """Flask extension that supports connections to main using Redis Sentinel.
 
     Supported URL types:
       redis+sentinel://
@@ -174,11 +174,11 @@ class RedisSentinel(object):
             raise RuntimeError(msg.format(self.config_prefix, app.import_name))
         return app.extensions[_EXTENSION_KEY][self.config_prefix]
 
-    def master_for(self, service_name, **kwargs):
-        return LocalProxy(lambda: self.get_instance().master_for(service_name, **kwargs))
+    def main_for(self, service_name, **kwargs):
+        return LocalProxy(lambda: self.get_instance().main_for(service_name, **kwargs))
 
-    def slave_for(self, service_name, **kwargs):
-        return LocalProxy(lambda: self.get_instance().slave_for(service_name, **kwargs))
+    def subordinate_for(self, service_name, **kwargs):
+        return LocalProxy(lambda: self.get_instance().subordinate_for(service_name, **kwargs))
 
 
 SentinelExtension = RedisSentinel  # for backwards-compatibility
