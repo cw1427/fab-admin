@@ -48,7 +48,7 @@ setup(
     install_requires=[
         "colorama==0.3.9",
         "click==6.7",
-        "SQLAlchemy==1.2.19",
+        "SQLAlchemy==1.3.0",
         "Flask>=0.12.1,<0.12.99",
         "Jinja2>=2.8",
         "Flask-Login==0.4.1",
