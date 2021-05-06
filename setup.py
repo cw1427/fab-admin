@@ -58,7 +58,7 @@ setup(
         "Flask-Babel==0.12.2",
         "Flask-AppBuilder==1.12.3",
         "Flask-Session==0.3.1",
-        "Flask-Cors==3.0.7",
+        "Flask-Cors==3.0.9",
         "fab-addon-autodoc>=0.1.5",
         "python-ldap==3.2.0",
         "mysqlclient==1.4.2",
