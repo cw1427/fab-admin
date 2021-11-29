@@ -60,7 +60,7 @@ setup(
         "Flask-Session==0.3.1",
         "Flask-Cors==3.0.7",
         "fab-addon-autodoc>=0.1.5",
-        "python-ldap==3.2.0",
+        "python-ldap==3.4.0",
         "mysqlclient==1.4.2",
         "pyMySQL==0.9.3",
         "gevent==1.4.0",
