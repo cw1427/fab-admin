@@ -56,7 +56,7 @@ setup(
         "Flask-OpenID==1.2.5",
         "Flask-WTF==0.14.2",
         "Flask-Babel==0.12.2",
-        "Flask-AppBuilder==1.12.3",
+        "Flask-AppBuilder==3.4.5",
         "Flask-Session==0.3.1",
         "Flask-Cors==3.0.7",
         "fab-addon-autodoc>=0.1.5",
