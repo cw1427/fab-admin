@@ -1,0 +1,5 @@
+fab-admin>=0.1.5
+
+#if use uwsgi as app server we can enable uwsgi task feature
+#uwsgi==2.0.18
+#uwsgi-tasks==0.7.2

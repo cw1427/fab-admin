@@ -84,7 +84,7 @@ class ApiUserView(BaseView):
                 self._format_datetime('%Y-%m-%d %H:%M:%S', g.user.last_login), \
                 'last_name': g.user.last_name, 'email': g.user.email, 'access': [role.name for role in g.user.roles]})
 
-    @expose('/logout', methods=['POST'])
+    @expose('/logout', methods=['GET', 'POST'])
     @login_required
     def logout(self):
         """The logout action RESTAPI method."""

@@ -1,0 +1,67 @@
+version: '3'
+services:
+  {* app_name *}:
+    image: <your fab_admin app image registry>:<version>
+    container_name: bas
+    network_mode: host
+    ports:
+     - 8080:8080
+    volumes:
+     - ./logs:/{* app_name *}/logs
+     - ./flask_session:/{* app_name *}/flask_session
+     - ./app.db:/{* app_name *}/app.db
+     - /etc/localtime:/etc/localtime:ro
+     - .db_pwd:/{* app_name *}/.db_pwd
+    environment:
+     - CONFIG_ENV=config_prod.py
+     - DB_USER=admin
+     - DB_HOST=your_mysql_server:3306
+     - DB_NAME={* app_name *}
+     - DB_PWD_FILE=.db_pwd
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
+  redis:
+    image: redis:4.0.11
+    container_name: redis
+    network_mode: host
+    extra_hosts:
+     - "localhost:127.0.0.1"
+    ports:
+     - "6379:6379"
+    volumes:
+     - ./data_4_0:/data
+     - ./redis_4_0.conf:/usr/local/etc/redis/redis.conf
+     - ./rejson.so:/usr/local/lib/rejson.so
+     - ./redis_sentinel_4_0.conf:/data/redis_sentinel.conf
+    command: ["redis-server","/usr/local/etc/redis/redis.conf"]
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
+  redisSentinel:
+    image: redis:4.0.11
+    container_name: redisSentinel
+    network_mode: host
+    depends_on:
+     - redis
+    extra_hosts:
+     - "localhost:127.0.0.1"
+    ports:
+     - "26379:26379"
+    volumes:
+     - ./data_4_0:/data
+     - ./redis_sentinel_4_0.conf:/data/redis_sentinel.conf
+    command: ["redis-server","/data/redis_sentinel.conf", "--sentinel"]
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000
+        

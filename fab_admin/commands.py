@@ -71,9 +71,10 @@ def sync_auth_redis():
 
 @cli_app.command("clone")
 @click.option('--name', '-n', default='fabadmin', help="The app name you want to created")
+@click.option('--tpl', '-t', default="elepa", help="The app template base name point to iview template")
 @click.option('--address', '-a', default='localhost', help="The app front-end will call the backend address")
 @click.option('--force', '-f', is_flag=True, default=False, help="force clone if there already has app folder")
-def clone_fabadmin_app(name, address, force):
+def clone_fabadmin_app(name, tpl, address, force):
     """
         Clone a basic fab_admin app
     """
@@ -91,7 +92,7 @@ def clone_fabadmin_app(name, address, force):
     render_data = {'app_name': name, 'now': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                    'secret_key': gen_salt(64), 'fab_admin_path': fab_admin.__path__[0], 'address': address,
                    'cwd': os.getcwd()}
-    template_path = os.path.join(fab_admin.__path__[0], 'app_templates')
+    template_path = os.path.join(fab_admin.__path__[0], "{0}_app_templates".format(tpl) if tpl  else 'app_templates')
     templateLoader = jinja2.FileSystemLoader(searchpath=template_path)
     templateEnv = jinja2.Environment(loader=templateLoader, variable_start_string='{*', variable_end_string='*}')
     for file_path in glob.iglob(os.path.join(template_path, '**'), recursive=True):

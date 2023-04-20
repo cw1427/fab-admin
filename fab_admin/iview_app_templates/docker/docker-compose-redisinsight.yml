@@ -1,0 +1,18 @@
+version: '3'
+services:
+  redisinsight:
+    image: redislabs/redisinsight:1.1.0
+    container_name: redisinsight
+    network_mode: host
+    ports:
+     - 8001:8001
+    environment:
+     - REDISINSIGHT_HOST={* address *}
+    volumes:
+     - ./data_redisinsight:/db
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000

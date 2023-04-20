@@ -1,0 +1,22 @@
+version: '3'
+services:
+  redis:
+    image: redis:4.0.11
+    container_name: redis
+    network_mode: host
+    extra_hosts:
+     - "localhost:127.0.0.1"
+    ports:
+     - "6379:6379"
+    volumes:
+     - ./data_4_0:/data
+     - ./redis_4_0.conf:/usr/local/etc/redis/redis.conf
+     - ./rejson.so:/usr/local/lib/rejson.so
+     - ./redis_sentinel_4_0.conf:/data/redis_sentinel.conf
+    command: ["redis-server","/usr/local/etc/redis/redis.conf"]
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 32000
+        hard: 40000

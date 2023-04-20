@@ -8,10 +8,12 @@ from flask_appbuilder import Model
 from flask_appbuilder.models.mixins import UserExtensionMixin
 from flask_appbuilder.security.sqla.models import User
 from flask_appbuilder.models.sqla import SQLA
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, orm
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm.session import Session as SessionBase
 from sqlalchemy.types import TypeDecorator
 from sqlalchemy.sql.sqltypes import Text
+from flask_sqlalchemy import SignallingSession
 import datetime
 import json
 import time
@@ -91,14 +93,54 @@ class CustomJsonEncoder(JSONEncoder):
         return super(CustomJsonEncoder, self).encode(obj)
 
 
+class MySignallingSession(SignallingSession):
+    """Bug fix for flask_sqlalchemy get_bind bind parameter miss on v2.X"""
+
+    def get_bind(self, mapper=None, clause=None, **kwargs):
+        """Return the engine or connection for a given model or
+        table, using the ``__bind_key__`` if it is set.
+        """
+        # mapper is None if someone tries to just get a connection
+        if mapper is not None:
+            try:
+                # SA >= 1.3
+                persist_selectable = mapper.persist_selectable
+            except AttributeError:
+                # SA < 1.3
+                persist_selectable = mapper.mapped_table
+
+            info = getattr(persist_selectable, 'info', {})
+            bind_key = info.get('bind_key')
+            if bind_key is not None:
+                state = self.app.extensions['sqlalchemy']
+                return state.db.get_engine(self.app, bind=bind_key)
+        return SessionBase.get_bind(self, mapper, clause, **kwargs)
+
+
 class SQLAlchemy(SQLA):
     """Customize SQLA class to overwrite the apply_pool_defualts to add pool_pre_ping parameter into SQLA."""
 
     def apply_pool_defaults(self, app, options):
         """overwrite apply_pool_defaults to customize pool_pre_ping parameter."""
-        super(SQLAlchemy, self).apply_pool_defaults(app, options)
+        options = super(SQLAlchemy, self).apply_pool_defaults(app, options)
         app.config.setdefault('SQLALCHEMY_POOL_PRE_PING', False)
         options["pool_pre_ping"] = app.config['SQLALCHEMY_POOL_PRE_PING']
+        return options
+
+    def create_session(self, options):
+        """Create the session factory used by :meth:`create_scoped_session`.
+
+        The factory **must** return an object that SQLAlchemy recognizes as a session,
+        or registering session events may raise an exception.
+
+        Valid factories include a :class:`~sqlalchemy.orm.session.Session`
+        class or a :class:`~sqlalchemy.orm.session.sessionmaker`.
+
+        The default implementation creates a ``sessionmaker`` for :class:`SignallingSession`.
+
+        :param options: dict of keyword arguments passed to session class
+        """
+        return orm.sessionmaker(class_=MySignallingSession, db=self, **options)
 
 
 class JsonEncodedDict(TypeDecorator):
